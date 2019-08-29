@@ -3,7 +3,7 @@
 
     typedef struct Estudante {
         int matricula;
-        char nome[50];
+        char *nome;
         int idade;
     } estudante;
 
@@ -24,6 +24,16 @@ int main() {
         printf("ERRO!\n");
         exit(2);
     }
+    
+    for(i = 0; i < N; i++) {
+        aluno[i].nome = (char *) malloc(35 * sizeof(char));
+
+        if(aluno[i].nome == NULL) {
+            printf("ERRO!\n");
+            exit(2);
+        }
+    }
+
     printf("------------------------------\n");
 
     cadastro_aluno(aluno, N);
@@ -46,6 +56,16 @@ int main() {
         printf("ERRO!\n");
         exit(2);
     }
+    
+    for(i = N; i <= X; i++) {
+        aluno[i].nome = (char *) malloc(35 * sizeof(char));
+
+        if(aluno[i].nome == NULL) {
+            printf("ERRO!\n");
+            exit(2);
+        }
+    }
+
 
     cadastro_aluno(&aluno[N], X);
 
@@ -53,6 +73,10 @@ int main() {
     printf("-------DADOS DOS ALUNOS-------\n");
 
     imprime_dados(aluno, (N + X));
+
+    for(i = 0; i < (N + X); i++) {
+        free(aluno[i].nome);
+    }
 
     free(aluno);
 
