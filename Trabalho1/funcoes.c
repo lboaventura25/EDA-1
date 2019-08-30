@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
 #include "funcoes.h"
 #include "struct_func.h"
 
 void menu_inicial(int *n) {
+    system("clear");
     printf("---------------Menu Inicial---------------\n");
     printf("(1) Cadastrar\n");
     printf("(2) Listar\n");
@@ -15,6 +18,7 @@ void menu_inicial(int *n) {
 
 int menu_cadastro(int *quant) {
     int x = *quant;
+    system("clear");
     printf("---------Modo Cadastro---------\n");
     printf("Digite quantos funcionarios deseja inserir ---> ");
     scanf("%d", quant);
@@ -22,19 +26,34 @@ int menu_cadastro(int *quant) {
     return x;
 }
 
-funcionario * aloca_funcionario(int quant) {
+funcionario * aloca_funcionario(funcionario *empregado, int quant, int *w, int *block) {
     int i = 0;
-    funcionario *func;
-    func = (funcionario *) malloc(quant * sizeof(funcionario));
-    check(&func, i, 0);
 
-    for(i = 0; i < quant; i++) {
-        (func[i]).nome = (char *) malloc(35 * sizeof(char));
-        (func[i]).email = (char *) malloc(35 * sizeof(char));
-        check(&func, i, 1);
+    if(*block == 0) {
+        funcionario *func;
+        func = (funcionario *) malloc(quant * sizeof(funcionario));
+        check(&func, i, 0);
+
+        for(i = 0; i < quant; i++) {
+            (func[i]).nome = (char *) malloc(35 * sizeof(char));
+            (func[i]).email = (char *) malloc(35 * sizeof(char));
+            check(&func, i, 1);
+        }
+        *block = 1;
+        return func;
+    }
+    else {
+        empregado = (funcionario *) realloc(empregado, quant * sizeof(funcionario));
+        check(&empregado, quant, 0);
+
+        for(i = *w; i < quant; i++) {
+            (empregado[i]).nome = (char *) malloc(35 * sizeof(char));
+            (empregado[i]).email = (char *) malloc(35 * sizeof(char));
+            check(&empregado, i, 1);
+        }
     }
 
-    return func;
+    return empregado;
 }
 
 void check(funcionario **confere, int ind, int x) {
@@ -50,11 +69,11 @@ void check(funcionario **confere, int ind, int x) {
     }
 }
 
-void set_struct(funcionario *func, int quant) {
+void set_struct(funcionario *func, int quant, int *w) {
     int i;
     printf("-------------------------------------------\n");
 
-    for(i = 0; i < quant; i++) {
+    for(i = *w; i < quant; i++) {
         printf("***CADASTRO DO FUNCIONARIO[%d]***\n", i+1);
         printf("Nome: ");
         getchar();
@@ -65,5 +84,21 @@ void set_struct(funcionario *func, int quant) {
         getchar();
         scanf("%[^\n]", func[i].email);
     }
+    *w = quant;
+    printf("%d Funcionarios Cadastrados com sucesso!\n", quant);
+    sleep(2);
 }
 
+void lista_funcionarios(funcionario *func, int quant) {
+    int i, j;
+    printf("-----------Lista de Funcionarios-----------\n");
+
+    for(i = 0; i < quant; i++) {
+        printf("%s - %s - %d\n", func[i].nome, func[i].email, func[i].idade);
+        for(j = 0; j < (strlen(func[i].nome) + strlen(func[i].email) + 8); j++) {
+            printf("-");
+        }
+        printf("\n");
+    }
+    sleep(5);
+}

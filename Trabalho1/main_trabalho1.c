@@ -6,7 +6,7 @@
 int main() {
 
     funcionario *empregado;
-    int N = -1, i;
+    int N = -1, i, x = 0, l = 0;
     int quant_funcionarios = 0;
 
     while(N != 0) {
@@ -15,12 +15,13 @@ int main() {
         switch(N) {
             case 1:
                 quant_funcionarios += menu_cadastro(&quant_funcionarios);
-                empregado = aloca_funcionario(quant_funcionarios);
-                set_struct(empregado, quant_funcionarios);
+                empregado = aloca_funcionario(&empregado[0], quant_funcionarios, &x, &l);
+                set_struct(&empregado[0], quant_funcionarios, &x);
                 break;
             
             case 2:
-                break;
+                lista_funcionarios(empregado, quant_funcionarios);
+                break; 
 
             case 3:
                 break;
