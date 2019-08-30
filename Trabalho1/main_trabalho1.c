@@ -14,7 +14,7 @@ int main() {
 
         switch(N) {
             case 1:
-                quant_funcionarios = menu_cadastro(&quant_funcionarios) + quant_funcionarios;
+                quant_funcionarios += menu_cadastro(&quant_funcionarios);
                 empregado = aloca_funcionario(quant_funcionarios);
                 set_struct(empregado, quant_funcionarios);
                 break;
