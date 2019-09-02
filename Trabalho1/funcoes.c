@@ -17,13 +17,13 @@ void menu_inicial(int *n) {
     scanf("%d", n);
 }
 
-int menu_cadastro(int *quant) {
-    int x = *quant;
+int menu_cadastro(int *quant, int *x) {
+    *x = *quant;
     printf("---------Modo Cadastro---------\n");
     printf("Digite quantos funcionarios deseja inserir ---> ");
     scanf("%d", quant);
 
-    return x;
+    return *x;
 }
 
 funcionario * aloca_funcionario(funcionario *empregado, int quant, int *w, int *block) {
@@ -110,17 +110,17 @@ int menu_editar(funcionario *func, int quant) {
     printf("(3) Buscar pelo email\n");
     printf(": De qual modo deseja Buscar o funcionario que quer editar --> ");
     int x = -7, tipo = 0;
+    char *nome;
+
+    nome = (char *) malloc(35 * sizeof(char));
+    if(nome == NULL) {
+        printf("ERRO!\n");
+        exit(2);
+    }
 
     while(tipo < 1 || tipo > 3) {
         scanf("%d", &tipo);
-        int i, j, igual;
-        char *nome;
-
-        nome = (char *) malloc(35 * sizeof(char));
-        if(nome == NULL) {
-            printf("ERRO!\n");
-            exit(2);
-        }
+        int i, j;
 
         switch(tipo) {
             case 1:
@@ -159,14 +159,16 @@ int menu_editar(funcionario *func, int quant) {
                 printf("Numero invalido. Digite novamente -->");
                 break;
         }
-        free(nome);
     }
+
+    free(nome);
     return x;
 }
 
 void edita_funcionario(funcionario *func, int indice) {
     if(indice >= 0) {
         printf("##### FUNCIONARIO ENCONTRADO #####\n");
+        sleep(1);
         printf("%s - %s - %d\n", func[indice].nome, func[indice].email, func[indice].idade);
 
         printf("******EDIÇÃO DO FUNCIONARIO******\n");
@@ -183,7 +185,56 @@ void edita_funcionario(funcionario *func, int indice) {
     }
     else {
         printf("##### FUNCIONARIO NAO ENCONTRADO #####\n");
+        sleep(1);
     }
+}
+
+int menu_excluir(funcionario *func, int quant) {
+    printf("---------Modo Excluir---------\n");
+    printf("(1) Excluir Pelo Indice\n");
+    printf("(2) Exluir pelo nome\n");
+    printf(": De qual modo deseja Excluir o funcionario --> ");
+    int x = -7, tipo = 0;
+    char *nome;
+
+    nome = (char *) malloc(35 * sizeof(char));
+    if(nome == NULL) {
+        printf("ERRO!\n");
+        exit(2);
+    }
+
+    while(tipo < 1 || tipo > 2) {
+        int i;
+        scanf("%d", &tipo);
+
+        switch(tipo) {
+            case 1:
+                printf(":: Digite o indice --> ");
+                scanf("%d", &x);
+                x--;
+                break;
+
+            case 2:
+                printf(":: Digite o nome --> ");
+                getchar();
+                scanf("%[^\n]", nome);
+
+                for(i = 0; i < quant; i++) {
+                    if(strcmp((func[i]).nome, nome) == 0) {
+                        x = i;
+                        break;
+                    }    
+                }
+                break;
+
+            default:
+                printf("Numero invalido. Digite novamente -->");
+                break;
+        }
+    }
+    
+    free(nome);
+    return x;
 }
 
 void libera_espaco(funcionario *func, int quant, int l) {
@@ -194,5 +245,52 @@ void libera_espaco(funcionario *func, int quant, int l) {
                 free((func[i]).email);
             }
             free(func);
+    }
+}
+
+void * exclui_funcionario(funcionario *func, int *quant, int indice, int *x) {
+    int i;
+
+    if(*quant > 1) {
+        if(indice >= 0) {
+            printf("##### FUNCIONARIO ENCONTRADO #####\n");
+            sleep(1);
+            *quant -= 1;
+
+            for(i = indice; i < *quant; i++) {
+                func[i] = func[i + 1];
+            }
+
+            func = (funcionario *) realloc(func, (*quant) * sizeof(funcionario));
+            check(&func, *quant, 0);
+            printf("##### Funcionario Excluido #####\n");
+            *x = *quant;
+            sleep(1);
+        }
+        else {
+            printf("##### FUNCIONARIO NAO ENCONTRADO #####\n");
+            sleep(1);
+        }
+        return func;
+    }
+    else {
+        if(indice >= 0) {
+            printf("##### FUNCIONARIO ENCONTRADO #####\n");
+            sleep(1);
+            *quant -= 1;
+
+            for(i = 0; i < *quant; i++) {
+                free((func[i]).nome);
+                free((func[i]).email);
+            }
+            free(func);
+            printf("##### Funcionario Excluido #####\n");
+            *x = *quant;
+            sleep(1);
+        }
+        else {
+            printf("##### FUNCIONARIO NAO ENCONTRADO #####\n");
+            sleep(1);
+        }
     }
 }

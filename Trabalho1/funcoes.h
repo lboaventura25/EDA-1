@@ -3,7 +3,7 @@
 #include "struct_func.h"
 
 void menu_inicial(int *);
-int menu_cadastro(int *);
+int menu_cadastro(int *, int *);
 funcionario * aloca_funcionario(funcionario *, int, int *, int *);
 void check(funcionario **, int, int);
 void le_struct(funcionario *, int);
@@ -12,3 +12,5 @@ void lista_funcionarios(funcionario *, int, int);
 int menu_editar(funcionario *, int);
 void edita_funcionario(funcionario *, int);
 void libera_espaco(funcionario *, int, int);
+int menu_excluir(funcionario *, int);
+void * exclui_funcionario(funcionario *, int *, int, int *);
