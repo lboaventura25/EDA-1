@@ -112,7 +112,7 @@ int menu_editar(funcionario *func, int quant) {
 
     while(tipo < 1 || tipo > 3) {
         scanf("%d", &tipo);
-        int i, j, igual = 0;
+        int i, j, igual;
         char *nome;
 
         nome = (char *) malloc(35 * sizeof(char));
@@ -133,15 +133,10 @@ int menu_editar(funcionario *func, int quant) {
                 scanf("%[^\n]", nome);
 
                 for(i = 0; i < quant; i++) {
-                    for(j = 0; j < 35; j++) {
-                        if((func[i]).nome[j] == nome[j]) {
-                            igual++;
-                        }
-                    }
-                    if(igual == strlen(nome)) {
+                    if(strcmp((func[i]).nome, nome) == 0) {
                         x = i;
                         break;
-                    }
+                    }    
                 }
                 break;
 
@@ -151,15 +146,10 @@ int menu_editar(funcionario *func, int quant) {
                 scanf("%[^\n]", nome);
 
                 for(i = 0; i < quant; i++) {
-                    for(j = 0; j < 35; j++) {
-                        if((func[i]).email[j] == nome[j]) {
-                            igual++;
-                        }
-                    }
-                    if(igual == strlen(nome)) {
+                    if(strcmp((func[i]).email, nome) == 0) {
                         x = i;
                         break;
-                    }
+                    }    
                 }
                 break;
 
