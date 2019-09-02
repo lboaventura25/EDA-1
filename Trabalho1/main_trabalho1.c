@@ -6,7 +6,7 @@
 int main() {
     funcionario *empregado;
     int N = -1, i, x = 0, l = 0;
-    int indice = 0;
+    int indice = 0, fixa = 0;
     int quant_funcionarios = 0;
 
     while(N != 0) {
@@ -20,13 +20,12 @@ int main() {
                 break;
             
             case 2:
-                lista_funcionarios(empregado, quant_funcionarios);
+                lista_funcionarios(empregado, quant_funcionarios, fixa);
                 break; 
 
             case 3:
-                printf("#######%d", quant_funcionarios);
                 indice = menu_editar(empregado, quant_funcionarios);
-                printf("Indice ==== %d\n", indice);
+                edita_funcionario(empregado, indice);
                 break;
 
             case 4:

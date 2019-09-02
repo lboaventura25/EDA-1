@@ -88,11 +88,11 @@ void set_struct(funcionario *func, int quant, int *w) {
     sleep(2);
 }
 
-void lista_funcionarios(funcionario *func, int quant) {
+void lista_funcionarios(funcionario *func, int quant, int fixa) {
     int i, j;
     printf("-----------Lista de Funcionarios-----------\n");
 
-    for(i = 0; i < quant; i++) {
+    for(i = fixa; i < quant; i++) {
         printf("%s - %s - %d\n", func[i].nome, func[i].email, func[i].idade);
         for(j = 0; j < (strlen(func[i].nome) + strlen(func[i].email) + 8); j++) {
             printf("-");
@@ -108,7 +108,7 @@ int menu_editar(funcionario *func, int quant) {
     printf("(2) Buscar pelo nome\n");
     printf("(3) Buscar pelo email\n");
     printf(": De qual modo deseja Buscar o funcionario que quer editar --> ");
-    int x, tipo = 0;
+    int x = -7, tipo = 0;
 
     while(tipo < 1 || tipo > 3) {
         scanf("%d", &tipo);
@@ -125,6 +125,7 @@ int menu_editar(funcionario *func, int quant) {
             case 1:
                 printf(":: Digite o indice --> ");
                 scanf("%d", &x);
+                x--;
                 break;
             
             case 2:
@@ -160,4 +161,26 @@ int menu_editar(funcionario *func, int quant) {
         free(nome);
     }
     return x;
+}
+
+void edita_funcionario(funcionario *func, int indice) {
+    if(indice >= 0) {
+        printf("##### FUNCIONARIO ENCONTRADO #####\n");
+        printf("%s - %s - %d\n", func[indice].nome, func[indice].email, func[indice].idade);
+
+        printf("******EDIÇÃO DO FUNCIONARIO******\n");
+        printf("Nome: ");
+        getchar();
+        scanf("%[^\n]", func[indice].nome);
+        printf("Idade: ");
+        scanf("%d", &func[indice].idade);
+        printf("Email: ");
+        getchar();
+        scanf("%[^\n]", func[indice].email);
+        printf("Funcionario(a), %s editado(a) com sucesso!\n", func[indice].nome);
+        sleep(1);
+    }
+    else {
+        printf("##### FUNCIONARIO NAO ENCONTRADO #####\n");
+    }
 }

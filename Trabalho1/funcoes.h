@@ -8,5 +8,6 @@ funcionario * aloca_funcionario(funcionario *, int, int *, int *);
 void check(funcionario **, int, int);
 void le_struct(funcionario *, int);
 void set_struct(funcionario *, int, int *);
-void lista_funcionarios(funcionario *, int);
+void lista_funcionarios(funcionario *, int, int);
 int menu_editar(funcionario *, int);
+void edita_funcionario(funcionario *, int);
