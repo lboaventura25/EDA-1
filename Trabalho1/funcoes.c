@@ -86,7 +86,7 @@ void set_struct(funcionario *func, int quant, int *w) {
     }
     *w = quant;
     printf("%d Funcionarios Cadastrados com sucesso!\n", quant);
-    sleep(1);
+    sleep(1.5);
 }
 
 void lista_funcionarios(funcionario *func, int quant, int fixa) {
@@ -100,7 +100,7 @@ void lista_funcionarios(funcionario *func, int quant, int fixa) {
         }
         printf("\n");
     }
-    sleep(5);
+    sleep(3);
 }
 
 int menu_editar(funcionario *func, int quant) {
@@ -181,11 +181,11 @@ void edita_funcionario(funcionario *func, int indice) {
         getchar();
         scanf("%[^\n]", func[indice].email);
         printf("Funcionario(a), %s editado(a) com sucesso!\n", func[indice].nome);
-        sleep(1);
+        sleep(1.5);
     }
     else {
         printf("##### FUNCIONARIO NAO ENCONTRADO #####\n");
-        sleep(1);
+        sleep(1.5);
     }
 }
 
@@ -237,16 +237,6 @@ int menu_excluir(funcionario *func, int quant) {
     return x;
 }
 
-void libera_espaco(funcionario *func, int quant, int l) {
-    int i;
-    if(l != 0) {
-            for(i = 0; i < quant; i++) {
-                free((func[i]).nome);
-                free((func[i]).email);
-            }
-            free(func);
-    }
-}
 
 void * exclui_funcionario(funcionario *func, int *quant, int indice, int *x) {
     int i;
@@ -265,11 +255,11 @@ void * exclui_funcionario(funcionario *func, int *quant, int indice, int *x) {
             check(&func, *quant, 0);
             printf("##### Funcionario Excluido #####\n");
             *x = *quant;
-            sleep(1);
+            sleep(1.5);
         }
         else {
             printf("##### FUNCIONARIO NAO ENCONTRADO #####\n");
-            sleep(1);
+            sleep(1.5);
         }
         return func;
     }
@@ -286,11 +276,22 @@ void * exclui_funcionario(funcionario *func, int *quant, int indice, int *x) {
             free(func);
             printf("##### Funcionario Excluido #####\n");
             *x = *quant;
-            sleep(1);
+            sleep(1.5);
         }
         else {
             printf("##### FUNCIONARIO NAO ENCONTRADO #####\n");
-            sleep(1);
+            sleep(1.5);
         }
+    }
+}
+
+void libera_espaco(funcionario *func, int quant, int l) {
+    int i;
+    if(l != 0) {
+            for(i = 0; i < quant; i++) {
+                free((func[i]).nome);
+                free((func[i]).email);
+            }
+            free(func);
     }
 }

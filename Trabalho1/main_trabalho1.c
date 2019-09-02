@@ -14,11 +14,8 @@ int main() {
 
         switch(N) {
             case 1:
-                printf("Quant = %d ==== x = %d\n", quant_funcionarios, x);
                 quant_funcionarios += menu_cadastro(&quant_funcionarios, &x);
-                printf("Quant = %d ==== x = %d\n", quant_funcionarios, x);
                 empregado = aloca_funcionario(&empregado[0], quant_funcionarios, &x, &l);
-                printf("Quant = %d ==== x = %d\n", quant_funcionarios, x);
                 set_struct(&empregado[0], quant_funcionarios, &x);
                 break;
             
