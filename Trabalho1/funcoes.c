@@ -12,6 +12,7 @@ void menu_inicial(int *n) {
     printf("(2) Listar\n");
     printf("(3) Editar\n");
     printf("(4) Excluir\n");
+    printf("(0) Fechar o programa\n");
     printf(": Qual opcao deseja realizar --->  ");
     scanf("%d", n);
 }
@@ -85,7 +86,7 @@ void set_struct(funcionario *func, int quant, int *w) {
     }
     *w = quant;
     printf("%d Funcionarios Cadastrados com sucesso!\n", quant);
-    sleep(2);
+    sleep(1);
 }
 
 void lista_funcionarios(funcionario *func, int quant, int fixa) {
@@ -182,5 +183,16 @@ void edita_funcionario(funcionario *func, int indice) {
     }
     else {
         printf("##### FUNCIONARIO NAO ENCONTRADO #####\n");
+    }
+}
+
+void libera_espaco(funcionario *func, int quant, int l) {
+    int i;
+    if(l != 0) {
+            for(i = 0; i < quant; i++) {
+                free((func[i]).nome);
+                free((func[i]).email);
+            }
+            free(func);
     }
 }

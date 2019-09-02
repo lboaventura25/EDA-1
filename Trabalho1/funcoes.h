@@ -11,3 +11,4 @@ void set_struct(funcionario *, int, int *);
 void lista_funcionarios(funcionario *, int, int);
 int menu_editar(funcionario *, int);
 void edita_funcionario(funcionario *, int);
+void libera_espaco(funcionario *, int, int);

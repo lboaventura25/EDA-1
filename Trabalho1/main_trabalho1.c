@@ -34,13 +34,6 @@ int main() {
 
     }
 
-    if(l != 0) {
-        for(i = 0; i < quant_funcionarios; i++) {
-            free(empregado[i].nome);
-        }
-
-        free(empregado);
-    }
-
+    libera_espaco(empregado, quant_funcionarios, l);
     return 0;
 }
