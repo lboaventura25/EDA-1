@@ -18,7 +18,6 @@ void menu_inicial(int *n) {
 
 int menu_cadastro(int *quant) {
     int x = *quant;
-    system("clear");
     printf("---------Modo Cadastro---------\n");
     printf("Digite quantos funcionarios deseja inserir ---> ");
     scanf("%d", quant);
@@ -101,4 +100,74 @@ void lista_funcionarios(funcionario *func, int quant) {
         printf("\n");
     }
     sleep(5);
+}
+
+int menu_editar(funcionario *func, int quant) {
+    printf("---------Modo Edição---------\n");
+    printf("(1) Buscar Pelo Indice\n");
+    printf("(2) Buscar pelo nome\n");
+    printf("(3) Buscar pelo email\n");
+    printf(": De qual modo deseja Buscar o funcionario que quer editar --> ");
+    int x, tipo = 0;
+
+    while(tipo < 1 || tipo > 3) {
+        scanf("%d", &tipo);
+        int i, j, igual = 0;
+        char *nome;
+
+        nome = (char *) malloc(35 * sizeof(char));
+        if(nome == NULL) {
+            printf("ERRO!\n");
+            exit(2);
+        }
+
+        switch(tipo) {
+            case 1:
+                printf(":: Digite o indice --> ");
+                scanf("%d", &x);
+                break;
+            
+            case 2:
+                printf(":: Digite o nome --> ");
+                getchar();
+                scanf("%[^\n]", nome);
+
+                for(i = 0; i < quant; i++) {
+                    for(j = 0; j < 35; j++) {
+                        if((func[i]).nome[j] == nome[j]) {
+                            igual++;
+                        }
+                    }
+                    if(igual == strlen(nome)) {
+                        x = i;
+                        break;
+                    }
+                }
+                break;
+
+            case 3:
+                printf(":: Digite o email --> ");
+                getchar();
+                scanf("%[^\n]", nome);
+
+                for(i = 0; i < quant; i++) {
+                    for(j = 0; j < 35; j++) {
+                        if((func[i]).email[j] == nome[j]) {
+                            igual++;
+                        }
+                    }
+                    if(igual == strlen(nome)) {
+                        x = i;
+                        break;
+                    }
+                }
+                break;
+
+            default:
+                printf("Numero invalido. Digite novamente -->");
+                break;
+        }
+        free(nome);
+    }
+    return x;
 }

@@ -9,3 +9,4 @@ void check(funcionario **, int, int);
 void le_struct(funcionario *, int);
 void set_struct(funcionario *, int, int *);
 void lista_funcionarios(funcionario *, int);
+int menu_editar(funcionario *, int);
