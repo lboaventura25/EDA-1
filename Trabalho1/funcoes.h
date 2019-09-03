@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "struct_func.h"
 
+void main_trabalho();
 void menu_inicial(int *);
 int menu_cadastro(int *, int *);
 funcionario * aloca_funcionario(funcionario *, int, int *, int *);

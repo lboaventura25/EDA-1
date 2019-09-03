@@ -5,6 +5,42 @@
 #include "funcoes.h"
 #include "struct_func.h"
 
+void main_trabalho() {
+    funcionario *empregado;
+    int N = -1, i, x = 0, l = 0;
+    int indice = 0, fixa = 0;
+    int quant_funcionarios = 0;
+
+    while(N != 0) {
+        menu_inicial(&N);
+
+        switch(N) {
+            case 1:
+                quant_funcionarios += menu_cadastro(&quant_funcionarios, &x);
+                empregado = aloca_funcionario(&empregado[0], quant_funcionarios, &x, &l);
+                set_struct(&empregado[0], quant_funcionarios, &x);
+                break;
+            
+            case 2:
+                lista_funcionarios(empregado, quant_funcionarios, fixa);
+                break; 
+
+            case 3:
+                indice = menu_editar(empregado, quant_funcionarios);
+                edita_funcionario(empregado, indice);
+                break;
+
+            case 4:
+                indice = menu_excluir(empregado, quant_funcionarios);
+                empregado = (funcionario *) exclui_funcionario(empregado, &quant_funcionarios, indice, &x);
+                break;
+        }
+
+    }
+
+    libera_espaco(empregado, quant_funcionarios, l);
+}
+
 void menu_inicial(int *n) {
     system("clear");
     printf("---------------Menu Inicial---------------\n");
