@@ -1,3 +1,5 @@
+#ifndef FUNCOES_H
+#define FUNCOES_H
 #include <stdio.h>
 #include <stdlib.h>
 #include "struct_func.h"
@@ -14,3 +16,5 @@ void edita_funcionario(funcionario *, int);
 void libera_espaco(funcionario *, int, int);
 int menu_excluir(funcionario *, int);
 void * exclui_funcionario(funcionario *, int *, int, int *);
+
+#endif
