@@ -17,5 +17,6 @@ void edita_funcionario(funcionario *, int);
 void libera_espaco(funcionario *, int, int);
 int menu_excluir(funcionario *, int);
 void * exclui_funcionario(funcionario *, int *, int, int *);
+void edita_nome(char *, int);
 
 #endif

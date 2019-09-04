@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 #include "funcoes.h"
 #include "struct_func.h"
 
@@ -114,11 +115,13 @@ void set_struct(funcionario *func, int quant, int *w) {
         printf("Nome: ");
         getchar();
         scanf("%[^\n]", func[i].nome);
+        edita_nome(func[i].nome, 0);
         printf("Idade: ");
         scanf("%d", &func[i].idade);
         printf("Email: ");
         getchar();
         scanf("%[^\n]", func[i].email);
+        edita_nome(func[i].email, 1);
     }
     *w = quant;
     printf("%d Funcionarios Cadastrados com sucesso!\n", quant);
@@ -169,9 +172,10 @@ int menu_editar(funcionario *func, int quant) {
                 printf(":: Digite o nome --> ");
                 getchar();
                 scanf("%[^\n]", nome);
+                edita_nome(nome, 0);
 
                 for(i = 0; i < quant; i++) {
-                    if(strcmp((func[i]).nome, nome) == 0) {
+                    if(strcmp((func[i]).nome, nome) == 0 || strstr((func[i]).nome, nome) != NULL) {
                         x = i;
                         break;
                     }    
@@ -182,9 +186,10 @@ int menu_editar(funcionario *func, int quant) {
                 printf(":: Digite o email --> ");
                 getchar();
                 scanf("%[^\n]", nome);
+                edita_nome(nome, 1);
 
                 for(i = 0; i < quant; i++) {
-                    if(strcmp((func[i]).email, nome) == 0) {
+                    if(strcmp((func[i]).email, nome) == 0 || strstr((func[i]).email, nome) != NULL) {
                         x = i;
                         break;
                     }    
@@ -211,11 +216,13 @@ void edita_funcionario(funcionario *func, int indice) {
         printf("Nome: ");
         getchar();
         scanf("%[^\n]", func[indice].nome);
+        edita_nome(func[indice].nome, 0);
         printf("Idade: ");
         scanf("%d", &func[indice].idade);
         printf("Email: ");
         getchar();
         scanf("%[^\n]", func[indice].email);
+        edita_nome(func[indice].email, 1);
         printf("Funcionario(a), %s editado(a) com sucesso!\n", func[indice].nome);
         sleep(1.5);
     }
@@ -254,9 +261,10 @@ int menu_excluir(funcionario *func, int quant) {
                 printf(":: Digite o nome --> ");
                 getchar();
                 scanf("%[^\n]", nome);
+                edita_nome(nome, 0);
 
                 for(i = 0; i < quant; i++) {
-                    if(strcmp((func[i]).nome, nome) == 0) {
+                    if(strcmp((func[i]).nome, nome) == 0 || strstr((func[i]).nome, nome) != NULL) {
                         x = i;
                         break;
                     }    
@@ -319,6 +327,21 @@ void * exclui_funcionario(funcionario *func, int *quant, int indice, int *x) {
             sleep(1.5);
         }
     }
+}
+
+void edita_nome(char *nome, int x) {
+    for(unsigned int H = 0; H < strlen(nome); H++) {
+			if(H == 0) {	
+				nome[H] = toupper(nome[H]);
+			}
+			if(H > 0) {
+				nome[H] = tolower(nome[H]);
+			}
+            if(x == 1) {
+                nome[H] = tolower(nome[H]);
+            }
+			nome[strlen(nome)] = '\0';
+		}
 }
 
 void libera_espaco(funcionario *func, int quant, int l) {
