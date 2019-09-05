@@ -331,19 +331,19 @@ void * exclui_funcionario(funcionario *func, int *quant, int indice, int *x) {
 
 void edita_nome(char *nome, int x) {
     for(unsigned int H = 0; H < strlen(nome); H++) {
-            if( x == 0) {
-                if(H == 0) {	
-                    nome[H] = toupper(nome[H]);
-                }
-                if(H > 0) {
-                    nome[H] = tolower(nome[H]);
-                }
+        if( x == 0) {
+            if(H == 0) {	
+                nome[H] = toupper(nome[H]);
             }
-            if(x == 1) {
+            if(H > 0) {
                 nome[H] = tolower(nome[H]);
             }
-			nome[strlen(nome)] = '\0';
-		}
+        }
+        if(x == 1) {
+            nome[H] = tolower(nome[H]);
+        }
+        nome[strlen(nome)] = '\0';
+	}
 }
 
 void libera_espaco(funcionario *func, int quant, int l) {
