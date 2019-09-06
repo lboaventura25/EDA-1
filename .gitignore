@@ -2,7 +2,5 @@
 .vscode
 prog
 bin
-.bin
-2019-2-Lista-1-ED1-Rafael.pdf
-2019-2-Trabalho-1-ED1-Rafael.pdf
-Trabalho1/bin_main
+*.bin
+*.pdf
