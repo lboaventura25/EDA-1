@@ -1,8 +1,11 @@
+CC := gcc
+CFLAGS := -W -Wall -Wshadow -pedantic
+
 all:FUNCOES
-	gcc main_trabalho1.c funcoes.o -o bin_main
+	$(CC) $(CFLAGS) main_trabalho1.c funcoes.o -o bin_main
 
 FUNCOES:
-	gcc -c funcoes.c
+	$(CC) $(CFLAGS) -c funcoes.c
 
 run: 
 	./bin_main

@@ -8,7 +8,7 @@
 
 void main_trabalho() {
     funcionario *empregado;
-    int N = -1, i, x = 0, l = 0;
+    int N = -1, x = 0, l = 0;
     int indice = 0, fixa = 0;
     int quant_funcionarios = 0;
 
@@ -130,7 +130,8 @@ void set_struct(funcionario *func, int quant, int *w) {
 }
 
 void lista_funcionarios(funcionario *func, int quant, int fixa, int tempo) {
-    int i, j;
+    int i;
+    unsigned int j;
     printf("-----------Lista de Funcionarios-----------\n");
 
     for(i = fixa; i < quant; i++) {
@@ -162,7 +163,7 @@ void menu_editar(funcionario *func, int quant) {
 
     while(tipo < 1 || tipo > 3) {
         scanf("%d", &tipo);
-        int i, j;
+        int i;
 
         switch(tipo) {
             case 1:
@@ -361,6 +362,8 @@ void * exclui_funcionario(funcionario *func, int *quant, int indice, int *x) {
             sleep(1.5);
         }
     }
+
+    return NULL;
 }
 
 void edita_nome(char *nome, int x) {
