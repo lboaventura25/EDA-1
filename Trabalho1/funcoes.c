@@ -23,12 +23,13 @@ void main_trabalho() {
                 break;
             
             case 2:
-                lista_funcionarios(empregado, quant_funcionarios, fixa);
+                lista_funcionarios(empregado, quant_funcionarios, fixa, 1);
                 break; 
 
             case 3:
-                indice = menu_editar(empregado, quant_funcionarios);
-                edita_funcionario(empregado, indice);
+                //indice = menu_editar(empregado, quant_funcionarios);
+                menu_editar(empregado, quant_funcionarios);
+                //edita_funcionario(empregado, indice);
                 break;
 
             case 4:
@@ -128,7 +129,7 @@ void set_struct(funcionario *func, int quant, int *w) {
     sleep(1.5);
 }
 
-void lista_funcionarios(funcionario *func, int quant, int fixa) {
+void lista_funcionarios(funcionario *func, int quant, int fixa, int tempo) {
     int i, j;
     printf("-----------Lista de Funcionarios-----------\n");
 
@@ -139,10 +140,12 @@ void lista_funcionarios(funcionario *func, int quant, int fixa) {
         }
         printf("\n");
     }
-    sleep(3);
+    if(tempo) {
+        sleep(3);
+    }
 }
 
-int menu_editar(funcionario *func, int quant) {
+void menu_editar(funcionario *func, int quant) {
     printf("---------Modo Edição---------\n");
     printf("(1) Buscar Pelo Indice\n");
     printf("(2) Buscar pelo nome\n");
@@ -165,7 +168,7 @@ int menu_editar(funcionario *func, int quant) {
             case 1:
                 printf(":: Digite o indice --> ");
                 scanf("%d", &x);
-                x--;
+                edita_funcionario(func, x--);
                 break;
             
             case 2:
@@ -177,7 +180,18 @@ int menu_editar(funcionario *func, int quant) {
                 for(i = 0; i < quant; i++) {
                     if(strcmp((func[i]).nome, nome) == 0 || strstr((func[i]).nome, nome) != NULL) {
                         x = i;
-                        break;
+                        lista_funcionarios(func, x+1, x, 0);
+                    }    
+                }
+                printf(":: Digite o nome completo do funcionario que deseja excluir: ");
+                getchar();
+                scanf("%[^\n]", nome);
+                edita_nome(nome, 0);
+
+                for(i = 0; i < quant; i++) {
+                    if(strcmp((func[i]).nome, nome) == 0 || strstr((func[i]).nome, nome) != NULL) {
+                        x = i;
+                        edita_funcionario(func, x);
                     }    
                 }
                 break;
@@ -191,7 +205,18 @@ int menu_editar(funcionario *func, int quant) {
                 for(i = 0; i < quant; i++) {
                     if(strcmp((func[i]).email, nome) == 0 || strstr((func[i]).email, nome) != NULL) {
                         x = i;
-                        break;
+                        lista_funcionarios(func, x+1, x, 0);
+                    }    
+                }
+                printf(":: Digite o email completo do funcionario que deseja excluir: ");
+                getchar();
+                scanf("%[^\n]", nome);
+                edita_nome(nome, 1);
+
+                for(i = 0; i < quant; i++) {
+                    if(strcmp((func[i]).email, nome) == 0 || strstr((func[i]).email, nome) != NULL) {
+                        x = i;
+                        edita_funcionario(func, x);
                     }    
                 }
                 break;
@@ -201,9 +226,7 @@ int menu_editar(funcionario *func, int quant) {
                 break;
         }
     }
-
     free(nome);
-    return x;
 }
 
 void edita_funcionario(funcionario *func, int indice) {
@@ -259,6 +282,17 @@ int menu_excluir(funcionario *func, int quant) {
 
             case 2:
                 printf(":: Digite o nome --> ");
+                getchar();
+                scanf("%[^\n]", nome);
+                edita_nome(nome, 0);
+
+                for(i = 0; i < quant; i++) {
+                    if(strcmp((func[i]).nome, nome) == 0 || strstr((func[i]).nome, nome) != NULL) {
+                        x = i;
+                        lista_funcionarios(func, x+1, x, 0);
+                    }    
+                }
+                printf(":: Digite o nome completo do funcionario que deseja excluir: ");
                 getchar();
                 scanf("%[^\n]", nome);
                 edita_nome(nome, 0);
@@ -331,11 +365,11 @@ void * exclui_funcionario(funcionario *func, int *quant, int indice, int *x) {
 
 void edita_nome(char *nome, int x) {
     for(unsigned int H = 0; H < strlen(nome); H++) {
-        if( x == 0) {
-            if(H == 0) {	
+        if(x == 0) {
+            if(H == 0 || nome[H-1] == ' ') {	
                 nome[H] = toupper(nome[H]);
             }
-            if(H > 0) {
+            else if(H > 0) {
                 nome[H] = tolower(nome[H]);
             }
         }
