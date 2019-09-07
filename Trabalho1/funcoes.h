@@ -12,11 +12,11 @@ void check(funcionario **, int, int);
 void le_struct(funcionario *, int);
 void set_struct(funcionario *, int, int *);
 void lista_funcionarios(funcionario *, int, int, int);
-void menu_editar(funcionario *, int);
-void edita_funcionario(funcionario *, int);
+int menu_editar(funcionario *, int);
+void edita_funcionario(funcionario *, int, int *);
 void libera_espaco(funcionario *, int, int);
 int menu_excluir(funcionario *, int);
-void * exclui_funcionario(funcionario *, int *, int, int *);
+void exclui_funcionario(funcionario *, int *, int, int *);
 void edita_nome(char *, int);
 
 #endif
