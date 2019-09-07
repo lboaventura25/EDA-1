@@ -184,7 +184,7 @@ int menu_editar(funcionario *func, int quant) {
                     }    
                 }
                 if(x >= 0) {
-                    printf(":: Digite o nome completo do funcionario que deseja excluir: ");
+                    printf(":: Digite o nome completo do funcionario que deseja editar: ");
                     getchar();
                     scanf("%[^\n]", nome);
                     edita_nome(nome, 0);
@@ -212,7 +212,7 @@ int menu_editar(funcionario *func, int quant) {
                     }    
                 }
                 if(x >= 0) {
-                    printf(":: Digite o email completo do funcionario que deseja excluir: ");
+                    printf(":: Digite o email completo do funcionario que deseja editar: ");
                     getchar();
                     scanf("%[^\n]", nome);
                     edita_nome(nome, 1);

@@ -10,6 +10,7 @@ FUNCOES:
 run: 
 	./bin_main
 
+.PHONY: clean
 clean:
 	rm *.o
 	rm ./bin_main
