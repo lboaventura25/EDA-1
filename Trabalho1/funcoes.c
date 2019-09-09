@@ -46,10 +46,10 @@ void main_trabalho() {
 void menu_inicial(int *n) {
     system("clear");
     printf("---------------Menu Inicial---------------\n");
-    printf("(1) Cadastrar\n");
-    printf("(2) Listar\n");
-    printf("(3) Editar\n");
-    printf("(4) Excluir\n");
+    printf("(1) Cadastrar Funcionario\n");
+    printf("(2) Listar Funcionario\n");
+    printf("(3) Editar Funcionario\n");
+    printf("(4) Excluir Funcionario\n");
     printf("(0) Fechar o programa\n");
     printf(": Qual opcao deseja realizar --->  ");
     scanf("%d", n);
