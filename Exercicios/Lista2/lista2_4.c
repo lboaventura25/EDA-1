@@ -5,7 +5,7 @@
 int main() {
     int decimal;
 
-    printf("Digite o numero binario: ");
+    printf("Digite o numero decimal: ");
     scanf("%d", &decimal);
 
     printf("Decimal = %d -- Binario = %d\n", decimal, conversor(decimal));
