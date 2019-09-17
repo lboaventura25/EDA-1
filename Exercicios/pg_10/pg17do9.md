@@ -45,7 +45,7 @@ Sim, porque ele estava perdido na casa do Pai, apesar de estar lá ele não era 
 
 
 
-### O filho se perdeu por deliberação, a ovelha se perdeu por descuído e a dracma se perdeu por descuido.
+### O filho se perdeu por deliberação, a ovelha se perdeu por desplicência e a dracma se perdeu por descuido.
 
 > ## Porque a dracma se perdeu por descuido?
 
