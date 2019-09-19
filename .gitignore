@@ -5,3 +5,7 @@ bin
 *.bin
 *.pdf
 Exercicios/Lista2/*.zip
+*.zip
+*a.out
+*.o
+*bin_main
