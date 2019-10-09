@@ -4,8 +4,8 @@
 int main() {
 
     int opcao = -1;
-    List * list;
-    Aluno * alunos;
+    List * list = NULL;
+    Aluno * alunos = NULL;
 
     list = create_list();
 
@@ -46,7 +46,10 @@ int main() {
 
     } while(opcao != 6);
 
-    free(alunos);
-    free(list);
+    if(alunos != NULL) {
+        free(alunos);
+    }
+    if(list != NULL)
+        free(list);
     return 0;
 }

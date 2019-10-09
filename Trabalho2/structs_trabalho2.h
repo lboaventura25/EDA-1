@@ -17,10 +17,10 @@ typedef struct aluno {
     struct disciplina * lista_disciplinas;
 }Aluno;
 
-typedef struct diciplina {
+typedef struct disciplina {
     char *nome;
-    int mencao;
+    char *mencao;
     struct disciplina * next;
 }Disciplina;
 
-#endif
+#endif 
