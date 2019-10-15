@@ -11,7 +11,7 @@ int main() {
 
     do {
         menu_incio(&opcao);
-
+            
         switch(opcao) {
             case 1:
                 alunos = menu_cadastro_aluno();
@@ -29,6 +29,9 @@ int main() {
                 break;
 
             case 4:
+                alunos = menu_vizualiza_aluno(list);
+                if(alunos)
+                    //menu_edita_aluno(alunos);
                 break;
 
             case 5:
@@ -37,7 +40,7 @@ int main() {
             case 6:
                 menu_encerra();
                 break;
-        
+            
             default:
                 printf("Opcao Invalida...\n");
                 sleep(1);
