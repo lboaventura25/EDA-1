@@ -11,7 +11,7 @@ void menu_incio(int *opcao) {
     printf("----------------- MENU INICIAL -----------------\n");
     printf("*            (1) Cadastrar Aluno               *\n");
     printf("*            (2) Listar Alunos                 *\n");
-    printf("*            (3) Vizualisar Aluno              *\n");
+    printf("*            (3) Visualizar Aluno              *\n");
     printf("*            (4) Editar Aluno                  *\n");
     printf("*            (5) Excluir Aluno                 *\n");
     printf("*            (6) Sair do Programa              *\n");
@@ -20,21 +20,27 @@ void menu_incio(int *opcao) {
     scanf("%d", opcao);	
 }
 
-Aluno * menu_cadastro_aluno() {
-    printf("\n------------------------------------------------\n");
-    getchar();
-    Aluno * aluno = create_aluno();
-    printf("Digite o nome do Aluno: ");
-    scanf("%[^\n]", aluno->nome);
-    printf("Digite a matricula do Aluno: ");
-    scanf("%d", &aluno->matricula);
-    getchar();
-    printf("Digite o email do Aluno: ");
-    scanf("%[^\n]", aluno->email);
-    edita_nome(aluno->nome, 0);
-    edita_nome(aluno->email, 1);
+void menu_cadastro_aluno(List * list) {
+    int qtd = 0;
     
-    return aluno;
+    printf(":::: Digite a quantidade de alunos que deseja cadastrar --> ");
+    scanf("%d", &qtd);
+    for(int i = 0; i < qtd; i++) {
+        printf("\n----------------------Cadastro de Alunos----------------------\n");
+        getchar();
+        Aluno * aluno = create_aluno();
+        printf("Digite o nome do Aluno: ");
+        scanf("%[^\n]", aluno->nome);
+        printf("Digite a matricula do Aluno: ");
+        scanf("%d", &aluno->matricula);
+        getchar();
+        printf("Digite o email do Aluno: ");
+        scanf("%[^\n]", aluno->email);
+        edita_nome(aluno->nome, 0);
+        edita_nome(aluno->email, 1);
+        push(list, aluno, 0);
+    }
+
 }
 
 Aluno * menu_vizualiza_aluno(List * list) {
@@ -57,6 +63,7 @@ Aluno * menu_vizualiza_aluno(List * list) {
 void menu_edita_aluno(Aluno * aluno) {
     printf("------------------------------------------------\n");
     printf("Digite o nome do Aluno: ");
+    getchar();
     scanf("%[^\n]", aluno->nome);
     printf("Digite a matricula do Aluno: ");
     scanf("%d", &aluno->matricula);
@@ -71,6 +78,7 @@ Aluno * buscar_aluno(List * list, int opcao) {
     int matricula, index;
     char *buscar;
     Aluno * aluno;
+    List * list_aux;
     switch(opcao) {
         case 1:
             buscar = (char *) malloc(50 * sizeof(char));
@@ -79,16 +87,42 @@ Aluno * buscar_aluno(List * list, int opcao) {
             scanf("%[^\n]", buscar);
             edita_nome(buscar, 0);
 
-            index = index_of(list, buscar, 0);
+            list_aux = alunos_parecidos(list, buscar);
+            if(list_aux->size == 1) {
+                index = index_of(list, buscar, 0);
 
-            if(index != -1000) {
-                aluno = at_pos(list, index);
+                if(index != -1000) {
+                    aluno = at_pos(list, index);
 
-                if(aluno != NULL) {
-                    free(buscar);
-                    return aluno;
+                    if(aluno != NULL) {
+                        free(buscar);
+
+                        pop_aluno(list_aux, 0);
+                        free(list_aux);
+                        return aluno;
+                    }
                 }
+            } else {
+                print_list(list_aux, 0);
+
+                printf("::: Digite o nome completo do Aluno --> ");
+                getchar();
+                scanf("%[^\n]", buscar);
+                edita_nome(buscar, 0);
+
+                aluno = busca_perfeita(list, buscar);
+
+                free(buscar);
+                Aluno * aux = list_aux->head;
+                while(aux) {
+                    pop_aluno(list_aux, 0);
+                    aux = aux->next;
+                }
+                free(list_aux);
+                return aluno;
             }
+
+            free(list_aux);
             free(buscar);
             return NULL;
             break;
@@ -136,6 +170,64 @@ Aluno * buscar_aluno(List * list, int opcao) {
             break;
     }
     return NULL;
+}
+
+void pop_aluno(List * list, int i) {
+    Aluno * aux = list->head;
+    char * nome = (char *) malloc(50 * sizeof(char));
+
+    strcpy(nome, aux->nome);
+    list->head = aux->next;
+    free(aux->nome);
+    free(aux->email);
+    free(aux);
+    list->size--;
+
+    if(i == 1) {
+        printf("**** Aluno(a), %s, excluido(a) com sucesso! ****\n", nome);
+        sleep(1.5);
+    }
+    free(nome);
+}
+
+List * alunos_parecidos(List * list, char * buscar) {
+    List * list_aux = create_list();
+    Aluno * aux = list->head;
+    Aluno * aux2;
+
+    while(aux) {
+        aux2 = create_aluno();
+        if(!strcmp(buscar, aux->nome) || strstr(aux->nome, buscar) != NULL || !strcmp(buscar, aux->email) || strstr(aux->email, buscar) != NULL) {
+            strcpy(aux2->nome, aux->nome);
+            aux2->matricula = aux->matricula;
+            strcpy(aux2->email, aux->email);
+            push(list_aux, aux2, 1);
+        }
+        aux = aux->next;
+    }
+
+    return list_aux;
+}
+
+Aluno * busca_perfeita(List * list, char * buscar) {
+    int index = 0;
+    Aluno * aux = list->head;
+
+    if(is_empty(&list)) {
+        printf("Lista vazia!\n");
+        sleep(1);
+        return NULL;
+    }
+
+    while(aux != NULL) {
+        if(!strcmp(buscar, aux->nome) || !strcmp(buscar, aux->email)) {
+            break;
+        }
+        index++;
+        aux = aux->next;
+    }
+
+    return at_pos(list, index);
 }
 
 void menu_do_aluno(Aluno *aluno) {
@@ -221,41 +313,43 @@ Aluno * create_aluno() {
         return aluno;
 }
 
-void push(List ** list, Aluno **aluno) {
-        if(list != NULL) {
-		(*aluno)->next = (*list)->head;
-		(*list)->head = (*aluno);
-		(*list)->size++;
-                printf("**** Aluno, %s, cadastrado com sucesso! ****\n", (*aluno)->nome);
-                sleep(1.5);
-                return;
+void push(List * list, Aluno *aluno, int i) {
+    if(list != NULL) {
+        aluno->next = list->head;
+        list->head = aluno;
+        list->size++;
+        if(i == 0) {
+            printf("**** Aluno, %s, cadastrado com sucesso! ****\n\n", aluno->nome);
+            sleep(1.5);
+        }
+        return;
 	}
 
-        printf("### Nao foi possivel cadastrar o Aluno! ###\n");
-        sleep(1.5);
+    printf("### Nao foi possivel cadastrar o Aluno! ###\n");
+    sleep(1.5);
 }
 
 void push_disciplina(Aluno * aluno, Disciplina * disciplina) {
-        if(aluno != NULL) {
-                disciplina->next = aluno->lista_disciplinas;
-                aluno->lista_disciplinas = disciplina;
-                aluno->disciplinas++;
-                printf("**** Disciplina, %s, cadastrada com sucesso! ****\n", disciplina->nome);
-                sleep(1.5);
-                return;
-        }
-
-        printf("### Nao foi possivel cadastrar a Disciplina! ###\n");
+    if(aluno != NULL) {
+        disciplina->next = aluno->lista_disciplinas;
+        aluno->lista_disciplinas = disciplina;
+        aluno->disciplinas++;
+        printf("**** Disciplina, %s, cadastrada com sucesso! ****\n", disciplina->nome);
         sleep(1.5);
+        return;
+    }
+
+    printf("### Nao foi possivel cadastrar a Disciplina! ###\n");
+    sleep(1.5);
 }
 
-void print_list(List **list) {
-    if(is_empty(list)) {
+void print_list(List * list, int i) {
+    if(is_empty(&list)) {
         printf("Lista vazia!\n");
         sleep(1);
         return;
     }
-    Aluno * aluno = (*list)->head;
+    Aluno * aluno = list->head;
 
     printf("-------------- Lista de Alunos --------------\n");
     while(aluno != NULL) {
@@ -263,12 +357,14 @@ void print_list(List **list) {
         printf("-----------------------------------------\n");
         aluno = aluno->next;
     }
-    char * release = (char *) malloc(sizeof(char));
-    printf(":: Pressione ENTER para continuar -->");
-    getchar();
-    scanf("%[^\n]", release);
-    getchar();
-    free(release);
+    if(i == 1) {
+        char * release = (char *) malloc(sizeof(char));
+        printf(":: Pressione ENTER para continuar -->");
+        getchar();
+        scanf("%[^\n]", release);
+        getchar();
+        free(release);
+    }
 }
 
 void print_list_disciplina(Aluno * aluno) {
@@ -294,17 +390,17 @@ void print_list_disciplina(Aluno * aluno) {
 }
 
 int is_empty_disciplina(Aluno * aluno) {
-        if(aluno->disciplinas == 0)
-                return 1;
-        else
-                return 0;
+    if(aluno->disciplinas == 0)
+        return 1;
+    else
+        return 0;
 }   
 
 int is_empty(List **list) {
-        if((*list)->size == 0)
-                return 1;
-        else
-                return 0;
+    if((*list)->size == 0)
+        return 1;
+    else
+        return 0;
 }
 
 int index_of(List * list, char * buscar, int matricula) {
@@ -372,11 +468,11 @@ void print_aluno(Aluno * aluno, int i) {
 }
 
 Disciplina * create_disciplina() {
-        Disciplina * disciplina = (Disciplina *) malloc(sizeof(Disciplina));
-        disciplina->nome = (char *) malloc(50 * sizeof(char));
-        disciplina->mencao = (char *) malloc(3 * sizeof(char));
-        
-        return disciplina;
+    Disciplina * disciplina = (Disciplina *) malloc(sizeof(Disciplina));
+    disciplina->nome = (char *) malloc(50 * sizeof(char));
+    disciplina->mencao = (char *) malloc(3 * sizeof(char));
+    
+    return disciplina;
 }
 
 Disciplina * menu_cadastra_disciplina() {
@@ -493,7 +589,7 @@ void exclui_disciplina(Aluno * aluno, Disciplina * disciplina) {
     while(aux != NULL) {
         if(strcmp(aux->nome, disciplina->nome) == 0 && strcmp(aux->mencao, disciplina->mencao) == 0) {
             if(i == 0) {
-                pop_disciplina(aluno);
+                pop_disciplina(aluno, 1);
                 break;
             } else {
                 pop_index_disciplina(aluno, aux_anterior, aux);
@@ -505,17 +601,21 @@ void exclui_disciplina(Aluno * aluno, Disciplina * disciplina) {
     }
 }
 
-void pop_disciplina(Aluno * aluno) {
+void pop_disciplina(Aluno * aluno, int i) {
         Disciplina * aux = aluno->lista_disciplinas;
         char * nome = (char *) malloc(50 * sizeof(char));
 
         strcpy(nome, aux->nome);
         aluno->lista_disciplinas = aux->next;
+        free(aux->nome);
+        free(aux->mencao);
         free(aux);
         aluno->disciplinas--;
 
-        printf("**** Disciplina, %s, excluida com sucesso! ****\n", nome);
-        sleep(1.5);
+        if(i == 1) {
+            printf("**** Disciplina, %s, excluida com sucesso! ****\n", nome);
+            sleep(1.5);
+        }
         free(nome);
 }
 

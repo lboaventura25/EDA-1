@@ -14,12 +14,11 @@ int main() {
             
         switch(opcao) {
             case 1:
-                alunos = menu_cadastro_aluno();
-                push(&list, &alunos);
+                menu_cadastro_aluno(list);
                 break;
 
             case 2:
-                print_list(&list);
+                print_list(list, 1);
                 break;
 
             case 3:
@@ -31,7 +30,7 @@ int main() {
             case 4:
                 alunos = menu_vizualiza_aluno(list);
                 if(alunos)
-                    //menu_edita_aluno(alunos);
+                    menu_edita_aluno(alunos);
                 break;
 
             case 5:
@@ -49,10 +48,33 @@ int main() {
 
     } while(opcao != 6);
 
-    if(alunos != NULL) {
-        free(alunos);
+    Aluno * aux;
+    Disciplina * disciplina;
+
+    if(list->head) {
+        if(list->head->lista_disciplinas) {
+            disciplina = list->head->lista_disciplinas;
+        }
+        else {
+            disciplina = NULL;
+        }
+        aux = list->head;
     }
-    if(list != NULL)
-        free(list);
+    else {
+        aux = NULL;
+    }
+    
+    while(aux) {
+        while(disciplina) {
+            pop_disciplina(aux, 0);
+            disciplina = disciplina->next;
+        }
+        pop_aluno(list, 0);
+        aux = aux->next;
+        if(disciplina)
+            disciplina = aux->lista_disciplinas;
+    }
+    free(list);
+
     return 0;
 }

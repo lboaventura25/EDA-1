@@ -6,20 +6,22 @@
 #include "structs_trabalho2.h"
 
 void menu_incio(int *);
-Aluno * menu_cadastro_aluno();
+void menu_cadastro_aluno(List *);
 void menu_encerra();
 Aluno * menu_vizualiza_aluno(List * list);
 void menu_do_aluno(Aluno *);
 void menu_edita_aluno(Aluno *);
 List * create_list();
 Aluno * create_aluno();
-void push(List **, Aluno **);
+void push(List *, Aluno *, int);
 Aluno * buscar_aluno(List *, int);
-void print_list(List **);
+void print_list(List *, int);
 void print_aluno(Aluno *, int);
 int is_empty(List **);
+Aluno * busca_perfeita(List *, char *);
 void edita_nome(char *, int);
 int index_of(List *, char *, int);
+List * alunos_parecidos(List *, char *);
 int index_of_disciplina(Aluno *, char *);
 Aluno * at_pos(List *, int);
 Disciplina * at_pos_disciplina(Aluno *, int);
@@ -31,7 +33,8 @@ Disciplina * menu_edita_disciplina(Aluno *);
 void edita_disciplina(Disciplina *);
 int is_empty_disciplina(Aluno *);
 void exclui_disciplina(Aluno *, Disciplina *);
-void pop_disciplina(Aluno *);
+void pop_aluno(List *, int);
+void pop_disciplina(Aluno *, int);
 void pop_index_disciplina(Aluno *, Disciplina *, Disciplina *);
 void check_mencao(char *);
 void menu_filtrar_disciplinas(Aluno *);
