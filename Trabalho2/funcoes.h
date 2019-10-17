@@ -3,8 +3,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
+#include <stdbool.h>
 #include "structs_trabalho2.h"
 
+void main_trabalho2();
 void menu_incio(int *);
 void menu_cadastro_aluno(List *);
 void menu_encerra();
