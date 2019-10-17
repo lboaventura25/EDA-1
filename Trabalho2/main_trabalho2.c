@@ -34,6 +34,9 @@ int main() {
                 break;
 
             case 5:
+                alunos = menu_vizualiza_aluno(list);
+                if(alunos)
+                    exclui_aluno(list, alunos);
                 break;
 
             case 6:

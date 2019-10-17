@@ -6,6 +6,11 @@
 #include "funcoes.h"
 #include "structs_trabalho2.h"
 
+
+/*
+    Método que mostra o menu inicial do Software e 
+    permite ao usuário escolher uma opção.
+*/
 void menu_incio(int *opcao) {
     system("clear");
     printf("----------------- MENU INICIAL -----------------\n");
@@ -20,6 +25,9 @@ void menu_incio(int *opcao) {
     scanf("%d", opcao);	
 }
 
+/*
+    Método que permite cadastrar o número de alunos desejados.
+*/
 void menu_cadastro_aluno(List * list) {
     int qtd = 0;
     
@@ -43,6 +51,9 @@ void menu_cadastro_aluno(List * list) {
 
 }
 
+/*
+    Método que permite buscar um aluno da melhor forma que o usuário desejar.
+*/
 Aluno * menu_vizualiza_aluno(List * list) {
     int opcao;
     Aluno * aluno;
@@ -60,6 +71,9 @@ Aluno * menu_vizualiza_aluno(List * list) {
     }
 }
 
+/*
+    Método que permite editar o aluno.
+*/
 void menu_edita_aluno(Aluno * aluno) {
     printf("------------------------------------------------\n");
     printf("Digite o nome do Aluno: ");
@@ -74,6 +88,11 @@ void menu_edita_aluno(Aluno * aluno) {
     edita_nome(aluno->email, 1);
 }
 
+/*
+    Método que busca o aluno dentro da lista de alunos.
+    E retorna o Aluno desejado após verificar se existe mais de 
+    um aluno com o nome ou email pesquisado.
+*/
 Aluno * buscar_aluno(List * list, int opcao) {
     int matricula, index;
     char *buscar;
@@ -105,7 +124,7 @@ Aluno * buscar_aluno(List * list, int opcao) {
             } else {
                 print_list(list_aux, 0);
 
-                printf("::: Digite o nome completo do Aluno --> ");
+                printf("::: **** [VERIFICACAO] ****\n::: Digite o nome completo do Aluno --> ");
                 getchar();
                 scanf("%[^\n]", buscar);
                 edita_nome(buscar, 0);
@@ -134,16 +153,42 @@ Aluno * buscar_aluno(List * list, int opcao) {
             scanf("%[^\n]", buscar);
             edita_nome(buscar, 1);
 
-            index = index_of(list, buscar, 0);
+            list_aux = alunos_parecidos(list, buscar);
+            if(list_aux->size == 1) {
+                index = index_of(list, buscar, 0);
 
-            if(index != -1000) {
-                aluno = at_pos(list, index);
+                if(index != -1000) {
+                    aluno = at_pos(list, index);
 
-                if(aluno != NULL) {
-                    free(buscar); 
-                    return aluno;
+                    if(aluno != NULL) {
+                        free(buscar);
+
+                        pop_aluno(list_aux, 0);
+                        free(list_aux);
+                        return aluno;
+                    }
                 }
+            } else {
+                print_list(list_aux, 0);
+
+                printf("::: **** [VERIFICACAO] ****\n::::Digite o email completo do Aluno --> ");
+                getchar();
+                scanf("%[^\n]", buscar);
+                edita_nome(buscar, 1);
+
+                aluno = busca_perfeita(list, buscar);
+
+                free(buscar);
+                Aluno * aux = list_aux->head;
+                while(aux) {
+                    pop_aluno(list_aux, 0);
+                    aux = aux->next;
+                }
+                free(list_aux);
+                return aluno;
             }
+
+            free(list_aux);
             free(buscar);
             return NULL;
             break;
@@ -172,6 +217,9 @@ Aluno * buscar_aluno(List * list, int opcao) {
     return NULL;
 }
 
+/*
+    Método que exclui o ultimo aluno incluído na lista.
+*/
 void pop_aluno(List * list, int i) {
     Aluno * aux = list->head;
     char * nome = (char *) malloc(50 * sizeof(char));
@@ -190,6 +238,10 @@ void pop_aluno(List * list, int i) {
     free(nome);
 }
 
+/*
+    Método que retorna uma lista auxiliar de alunos copiados da 
+    lista original, nessa lista auxiliar contém alunos que combinam com a pesquisa realizada.
+*/
 List * alunos_parecidos(List * list, char * buscar) {
     List * list_aux = create_list();
     Aluno * aux = list->head;
@@ -209,6 +261,10 @@ List * alunos_parecidos(List * list, char * buscar) {
     return list_aux;
 }
 
+/*
+    Método que realiza a busca "perfeita", que só é chamado caso 
+    exista mais de um aluno nos moldes de pesquisa.
+*/
 Aluno * busca_perfeita(List * list, char * buscar) {
     int index = 0;
     Aluno * aux = list->head;
@@ -230,6 +286,10 @@ Aluno * busca_perfeita(List * list, char * buscar) {
     return at_pos(list, index);
 }
 
+/*
+    Método que imprime na tela o menu do aluno e 
+    chama as ações dentro do nome do aluno.
+*/
 void menu_do_aluno(Aluno *aluno) {
     int opcao, i = 0;
     Disciplina * disciplina;
@@ -290,29 +350,41 @@ void menu_do_aluno(Aluno *aluno) {
     } while(opcao != 7);
 }
 
+/*
+    Método que imprime a tela de encerramento do programa.
+*/
 void menu_encerra() {
-        printf("\n\n\n\tEncerrando o Programa....\n");
-        sleep(1.5);
+    printf("\n\n\n\tAte uma proxima vez....\n");
+    sleep(1.5);
 }
 
+/*
+    Método que aloca o espaço na memória e retorna a lista criada.
+*/
 List * create_list() {
-        List * list = (List *) malloc(sizeof(List));
-        list->head = NULL;
-        list->size = 0;
+    List * list = (List *) malloc(sizeof(List));
+    list->head = NULL;
+    list->size = 0;
 
-        return list;
+    return list;
 }
 
+/*
+    Método que aloca o espaço na memória e retorna o aluno criado.
+*/
 Aluno * create_aluno() {
-        Aluno * aluno = (Aluno *) malloc(sizeof(Aluno));
-        aluno->nome = (char *) malloc(50 * sizeof(char));
-        aluno->email = (char *) malloc(50 * sizeof(char));
-        aluno->disciplinas = 0;
-        aluno->lista_disciplinas = NULL;
+    Aluno * aluno = (Aluno *) malloc(sizeof(Aluno));
+    aluno->nome = (char *) malloc(50 * sizeof(char));
+    aluno->email = (char *) malloc(50 * sizeof(char));
+    aluno->disciplinas = 0;
+    aluno->lista_disciplinas = NULL;
 
-        return aluno;
+    return aluno;
 }
 
+/*
+    Método inclui um aluno na lista por meio de um push.
+*/
 void push(List * list, Aluno *aluno, int i) {
     if(list != NULL) {
         aluno->next = list->head;
@@ -329,6 +401,9 @@ void push(List * list, Aluno *aluno, int i) {
     sleep(1.5);
 }
 
+/*
+    Método que inclui uma disciplina ao aluno por meio de um push.
+*/
 void push_disciplina(Aluno * aluno, Disciplina * disciplina) {
     if(aluno != NULL) {
         disciplina->next = aluno->lista_disciplinas;
@@ -343,6 +418,9 @@ void push_disciplina(Aluno * aluno, Disciplina * disciplina) {
     sleep(1.5);
 }
 
+/*
+    Método que imprime todos os alunos da lista.
+*/
 void print_list(List * list, int i) {
     if(is_empty(&list)) {
         printf("Lista vazia!\n");
@@ -367,6 +445,9 @@ void print_list(List * list, int i) {
     }
 }
 
+/*
+    Método que imprime todas as disciplinas de um aluno.
+*/
 void print_list_disciplina(Aluno * aluno) {
     if(is_empty_disciplina(aluno)) {
         printf("Lista vazia!\n");
@@ -389,6 +470,9 @@ void print_list_disciplina(Aluno * aluno) {
     free(release);
 }
 
+/*
+    Método que verifica se a lista de disciplinas de um aluno está vazia.
+*/
 int is_empty_disciplina(Aluno * aluno) {
     if(aluno->disciplinas == 0)
         return 1;
@@ -396,6 +480,9 @@ int is_empty_disciplina(Aluno * aluno) {
         return 0;
 }   
 
+/*
+    Método que verifica se a lista de alunos está vazia.
+*/
 int is_empty(List **list) {
     if((*list)->size == 0)
         return 1;
@@ -403,6 +490,10 @@ int is_empty(List **list) {
         return 0;
 }
 
+/*
+    Método que retorna o indice de um aluno caso só tenha um
+    nos padrões da pesquisa realizada pelo usuário.
+*/
 int index_of(List * list, char * buscar, int matricula) {
     int index = 0;
     Aluno * aux = list->head;
@@ -424,13 +515,16 @@ int index_of(List * list, char * buscar, int matricula) {
     return index;
 }
 
+/*
+    Método que retorna o aluno através do índice.
+*/
 Aluno * at_pos(List *list, int index) {
 	int cont = 0;
 	Aluno *aux = list->head;
 
 	if(is_empty(&list) || index < 0 || index >= list->size) {
 		printf("***** Aluno nao encontrado! *****\n");
-                sleep(1);
+        sleep(1);
 	} else {
 		while(aux != NULL) {
 			if(cont == index) {
@@ -443,6 +537,9 @@ Aluno * at_pos(List *list, int index) {
 	return NULL;
 }
 
+/*
+    Método que imprime um aluno.
+*/
 void print_aluno(Aluno * aluno, int i) {
     if(i == 0) {
         char * release = (char *) malloc(sizeof(char));
@@ -467,6 +564,9 @@ void print_aluno(Aluno * aluno, int i) {
     }    
 }
 
+/*
+    Método que aloca o espaço na memória da disciplina e retona ela.
+*/
 Disciplina * create_disciplina() {
     Disciplina * disciplina = (Disciplina *) malloc(sizeof(Disciplina));
     disciplina->nome = (char *) malloc(50 * sizeof(char));
@@ -475,73 +575,138 @@ Disciplina * create_disciplina() {
     return disciplina;
 }
 
+/*
+    Método que cadastra uma disciplina e retorna ela.
+*/
 Disciplina * menu_cadastra_disciplina() {
-        printf("-------------------------------------------\n");
-        Disciplina * disciplina = create_disciplina();
-        getchar();
-        printf("Digite o nome da Disciplina: ");
-        scanf("%[^\n]", disciplina->nome);
-        edita_nome(disciplina->nome, 2);
+    printf("-------------------------------------------\n");
+    Disciplina * disciplina = create_disciplina();
+    getchar();
+    printf("Digite o nome da Disciplina: ");
+    scanf("%[^\n]", disciplina->nome);
+    edita_nome(disciplina->nome, 2);
 
-        check_mencao(disciplina->mencao);
+    check_mencao(disciplina->mencao);
 
-        return disciplina;
+    return disciplina;
 }
 
+/*
+    Método que checa a menção  digitada pelo usuário.
+*/
 void check_mencao(char * mencao) {
-        int i = 0;
+    int i = 0;
 
-        while(1) {
-                if(i > 0)
-                        printf("Mencao invalida! Tente novamente...\n");
-                getchar();
-                printf("Digite a mencao: ");
-                scanf("%[^\n]", mencao);
-                
-                if((strcmp(mencao, "SS") == 0 || strcmp(mencao, "MS") == 0 || strcmp(mencao, "MM") == 0 || strcmp(mencao, "MI") == 0 || strcmp(mencao, "II") == 0 || strcmp(mencao, "TR") == 0 || strcmp(mencao, "SR") == 0))
-                        break;
-                i++;
-        }
-}
-
-void edita_disciplina(Disciplina * disciplina) {
-        printf("--------------------------------------------------\n");
-        printf("Nome da Disciplina: %s\n", disciplina->nome);
-        printf("Digite a nova mencao: ");
-        check_mencao(disciplina->mencao);
-        printf("--------------------------------------------------\n");
-        printf("**** Disciplina, %s, editada com sucesso ****\n", disciplina->nome);
-        sleep(1.5);
-}
-
-Disciplina * menu_edita_disciplina(Aluno * aluno) {
-        char * buscar;
-        Disciplina * disciplina;
-
-        buscar = (char *) malloc(50 * sizeof(char));
-
-        printf("::: Digite o nome da disciplina --> ");
+    while(1) {
+        if(i > 0)
+            printf("Mencao invalida! Tente novamente...\n");
         getchar();
-        scanf("%[^\n]", buscar);
-
-        edita_nome(buscar, 2);
-
-        int index = index_of_disciplina(aluno, buscar);
-
-        if(index != -1000) {
-                disciplina = at_pos_disciplina(aluno, index);
-
-                if(disciplina != NULL) {
-                        free(buscar);
-                        return disciplina;
-                }
-        }
-        free(buscar);
-        return NULL;
+        printf("Digite a mencao: ");
+        scanf("%[^\n]", mencao);
+        
+        if((strcmp(mencao, "SS") == 0 || strcmp(mencao, "MS") == 0 || strcmp(mencao, "MM") == 0 || strcmp(mencao, "MI") == 0 || strcmp(mencao, "II") == 0 || strcmp(mencao, "TR") == 0 || strcmp(mencao, "SR") == 0))
+            break;
+        i++;
+    }
 }
 
+/*
+    Método que permite o usuário editar a menção da disciplina.
+*/
+void edita_disciplina(Disciplina * disciplina) {
+    printf("--------------------------------------------------\n");
+    printf("Nome da Disciplina: %s\n", disciplina->nome);
+    printf("Digite a nova mencao: ");
+    check_mencao(disciplina->mencao);
+    printf("--------------------------------------------------\n");
+    printf("**** Disciplina, %s, editada com sucesso ****\n", disciplina->nome);
+    sleep(1.5);
+}
+
+/*
+    Método que busca uma disciplina e retorna o resultado da busca.
+*/
+Disciplina * menu_edita_disciplina(Aluno * aluno) {
+    char * buscar;
+    Disciplina * disciplina;
+
+    buscar = (char *) malloc(50 * sizeof(char));
+
+    printf("::: Digite o nome da disciplina --> ");
+    getchar();
+    scanf("%[^\n]", buscar);
+
+    edita_nome(buscar, 2);
+
+    int index = index_of_disciplina(aluno, buscar);
+
+    if(index != -1000) {
+        disciplina = at_pos_disciplina(aluno, index);
+
+        if(disciplina != NULL) {
+            free(buscar);
+            return disciplina;
+        }
+    }
+    free(buscar);
+    return NULL;
+}
+
+/*
+    Método que exclui o aluno desejado.
+*/
+void exclui_aluno(List * list, Aluno * aluno) {
+    Aluno * aux = list->head;
+    Aluno * aux_anterior = list->head;
+    int i = 0;
+
+    while(aux != NULL) {
+        if(strcmp(aux->nome, aluno->nome) == 0 && strcmp(aux->email, aluno->email) == 0) {
+            if(i == 0) {
+                pop_aluno(list, 1);
+                break;
+            } else {
+                pop_index_aluno(list, aux_anterior, aux);
+            }
+        }
+        aux_anterior = aux;
+        aux = aux->next;
+        i++;
+    }
+}
+
+/*
+    Método que apaga e libera o espaço da memória do aluno desejado.
+*/
+void pop_index_aluno(List * list, Aluno * aluno_anterior, Aluno * aluno_excluir) {
+    Aluno * aux = aluno_excluir;
+    char * nome = (char *) malloc(50 * sizeof(char));
+
+    strcpy(nome, aux->nome);
+    aluno_anterior->next = aux->next;
+    free(aux->nome);
+    free(aux->email);
+    if(aux->lista_disciplinas) {
+        Disciplina * disciplina = aux->lista_disciplinas;
+        while(disciplina) {
+            pop_disciplina(aux, 0);
+            disciplina = disciplina->next;
+        }
+        free(aux->lista_disciplinas);
+    }
+    free(aux);
+    list->size--; 
+
+    printf("**** Disciplina, %s, excluida com sucesso! ****\n", nome);
+    sleep(1.5);
+    free(nome);
+}
+
+/*
+    Método que retorna um aluno através de um índice recebido ou NULL caso não ache o aluno.
+*/
 Disciplina * at_pos_disciplina(Aluno * aluno, int index) {
-        int cont = 0;
+    int cont = 0;
 	Disciplina * aux = aluno->lista_disciplinas;
 
 	if(is_empty_disciplina(aluno) || index < 0 || index >= aluno->disciplinas) {
@@ -559,28 +724,34 @@ Disciplina * at_pos_disciplina(Aluno * aluno, int index) {
 	return NULL;
 }
 
+/*
+    Método que retorna o índice da disciplina pesquisada.
+*/
 int index_of_disciplina(Aluno * aluno, char * buscar) {
-        int index = 0;
-        Disciplina * aux = aluno->lista_disciplinas;
-        edita_nome(buscar, 2);
+    int index = 0;
+    Disciplina * aux = aluno->lista_disciplinas;
+    edita_nome(buscar, 2);
 
-        if(is_empty_disciplina(aluno)) {
-                printf("Lista vazia!\n");
-                sleep(1);
-                return -1000;
+    if(is_empty_disciplina(aluno)) {
+        printf("Lista vazia!\n");
+        sleep(1);
+        return -1000;
+    }
+
+    while(aux != NULL) {
+        if(!strcmp(buscar, aux->nome) || strstr(aux->nome, buscar) != NULL) {
+            break;
         }
+        index++;
+        aux = aux->next;
+    }
 
-        while(aux != NULL) {
-                if(!strcmp(buscar, aux->nome) || strstr(aux->nome, buscar) != NULL) {
-                                break;
-                        }
-                index++;
-                aux = aux->next;
-        }
-
-        return index;
+    return index;
 }
 
+/*
+    Método que exclui a disciplina do aluno desejada pelo usuário. 
+*/
 void exclui_disciplina(Aluno * aluno, Disciplina * disciplina) {
     Disciplina * aux = aluno->lista_disciplinas;
     Disciplina * aux_anterior = aluno->lista_disciplinas;
@@ -601,52 +772,66 @@ void exclui_disciplina(Aluno * aluno, Disciplina * disciplina) {
     }
 }
 
+/*
+    Método que exclui a última disciplina incluída no aluno. 
+*/
 void pop_disciplina(Aluno * aluno, int i) {
-        Disciplina * aux = aluno->lista_disciplinas;
-        char * nome = (char *) malloc(50 * sizeof(char));
+    Disciplina * aux = aluno->lista_disciplinas;
+    char * nome = (char *) malloc(50 * sizeof(char));
 
-        strcpy(nome, aux->nome);
-        aluno->lista_disciplinas = aux->next;
-        free(aux->nome);
-        free(aux->mencao);
-        free(aux);
-        aluno->disciplinas--;
+    strcpy(nome, aux->nome);
+    aluno->lista_disciplinas = aux->next;
+    free(aux->nome);
+    free(aux->mencao);
+    free(aux);
+    aluno->disciplinas--;
 
-        if(i == 1) {
-            printf("**** Disciplina, %s, excluida com sucesso! ****\n", nome);
-            sleep(1.5);
-        }
-        free(nome);
-}
-
-void pop_index_disciplina(Aluno * aluno, Disciplina * disciplina_anterior, Disciplina * disciplina_excluir) {
-        Disciplina * aux = disciplina_excluir;
-        char * nome = (char *) malloc(50 * sizeof(char));
-
-        strcpy(nome, aux->nome);
-        disciplina_anterior->next = aux->next;
-        free(aux);
-        aluno->disciplinas--; 
-
+    if(i == 1) {
         printf("**** Disciplina, %s, excluida com sucesso! ****\n", nome);
         sleep(1.5);
-        free(nome);
+    }
+    free(nome);
 }
 
+/*
+    Método que exclui a disciplina recebida.
+*/
+void pop_index_disciplina(Aluno * aluno, Disciplina * disciplina_anterior, Disciplina * disciplina_excluir) {
+    Disciplina * aux = disciplina_excluir;
+    char * nome = (char *) malloc(50 * sizeof(char));
+
+    strcpy(nome, aux->nome);
+    disciplina_anterior->next = aux->next;
+    free(aux->nome);
+    free(aux->mencao);
+    free(aux);
+    aluno->disciplinas--; 
+
+    printf("**** Disciplina, %s, excluida com sucesso! ****\n", nome);
+    sleep(1.5);
+    free(nome);
+}
+
+/*
+    Método que imprime na tela o menu de filtragem de disciplinas do aluno.
+*/
 void menu_filtrar_disciplinas(Aluno * aluno) {
-        char * buscar;
-        buscar = (char *) malloc(2 * sizeof(char));
-        
-        printf("--------------------------------------------------\n");
-        getchar();
-        printf("::: Digite a mencao que deseja filtrar --> ");
-        scanf("%[^\n]", buscar);
+    char * buscar;
+    buscar = (char *) malloc(2 * sizeof(char));
+    
+    printf("--------------------------------------------------\n");
+    getchar();
+    printf("::: Digite a mencao que deseja filtrar --> ");
+    scanf("%[^\n]", buscar);
 
-        filtra(aluno, buscar);
+    filtra(aluno, buscar);
 
-        free(buscar);
+    free(buscar);
 }
 
+/*
+    Método que imprime a lista de disciplinas com a menção desejada.
+*/
 void filtra(Aluno * aluno, char * buscar) {
     Disciplina * disciplinas = aluno->lista_disciplinas;
 
@@ -669,6 +854,9 @@ void filtra(Aluno * aluno, char * buscar) {
     free(release);
 }
 
+/*
+    Método que imprime o relatório geral do aluno. 
+*/
 void relatorio_geral_aluno(Aluno * aluno) {
     char * release = (char *) malloc(sizeof(char));
     if(aluno) {
@@ -689,6 +877,9 @@ void relatorio_geral_aluno(Aluno * aluno) {
     }
 }
 
+/*
+    Método que retorna o número de aprovações do aluno.
+*/
 int get_aprovacoes(Aluno * aluno) {
     Disciplina * disciplina = aluno->lista_disciplinas;
     int cont = 0;
@@ -702,6 +893,9 @@ int get_aprovacoes(Aluno * aluno) {
     return cont;
 }
 
+/*
+    Método que retorna o número de reprovações do aluno.
+*/
 int get_reprovacoes(Aluno * aluno) {
     Disciplina * disciplina = aluno->lista_disciplinas;
     int cont = 0;
@@ -715,6 +909,9 @@ int get_reprovacoes(Aluno * aluno) {
     return cont;
 }
 
+/*
+    Método que retorna o número de trancamentos do aluno.
+*/
 int get_trancamentos(Aluno * aluno) {
     Disciplina * disciplina = aluno->lista_disciplinas;
     int cont = 0;
@@ -728,26 +925,30 @@ int get_trancamentos(Aluno * aluno) {
     return cont;
 }
 
+/*
+    Método que edita o nome para os padrões desejados pelo Sistema e 
+    realoca a memória para o número exatos de caracteres.
+*/
 void edita_nome(char *nome, int x) {
     for(unsigned int H = 0; H < strlen(nome); H++) {
         if(x == 0) {
             if(H == 0 || nome[H-1] == ' ') {	
-                    nome[H] = toupper(nome[H]);
+                nome[H] = toupper(nome[H]);
             } else if(H > 0) {
-                    nome[H] = tolower(nome[H]);
+                nome[H] = tolower(nome[H]);
             }
         }
         if(x == 1) {
-                nome[H] = tolower(nome[H]);
+            nome[H] = tolower(nome[H]);
         }
         if(x == 2) {
-                if(H == 0) {
-                        nome[H] = toupper(nome[H]);
-                } else {
-                        nome[H] = tolower(nome[H]);
-                }
+            if(H == 0) {
+                nome[H] = toupper(nome[H]);
+            } else {
+                nome[H] = tolower(nome[H]);
+            }
         }
-                nome[strlen(nome)] = '\0';
+        nome[strlen(nome)] = '\0';
     }
 
     nome = (char *) realloc(nome, strlen(nome));

@@ -30,6 +30,8 @@ Disciplina * menu_cadastra_disciplina();
 void push_disciplina(Aluno *, Disciplina *);
 void print_list_disciplina(Aluno *);
 Disciplina * menu_edita_disciplina(Aluno *);
+void exclui_aluno(List *, Aluno *);
+void pop_index_aluno(List *, Aluno *, Aluno *);
 void edita_disciplina(Disciplina *);
 int is_empty_disciplina(Aluno *);
 void exclui_disciplina(Aluno *, Disciplina *);
