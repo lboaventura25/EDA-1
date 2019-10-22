@@ -19,6 +19,9 @@ void print_list(List * list);
 bool is_empty(List * list);
 void pop(List * list);
 Node * at_pos(List * list, int indice);
+int index_of_nota(List * list, float nota);
+void insert(List * list, Node * node, int index);
+void pop_list(List * list);
 
 int main(){
     float nota;
@@ -49,6 +52,25 @@ int main(){
     }else{
         printf("Indice inexistente!\n");
     }
+    printf("-------------------------------------------\n");
+    printf("Digite a nota que deseja o indice: ");
+    scanf("%f", &nota);
+    num = index_of_nota(list, nota);
+    if(num >= 0) {
+        printf("Indice encontrado eh %d\n", num);
+    } else {
+        printf("Nota inexistente!\n");
+    }
+    printf("Digite a nova nota: ");
+    scanf("%f", &nota);
+    aux = create_node(nota);
+    printf("Digite a posicao que deseja inserir a nota: ");
+    scanf("%d", &num);
+    insert(list, aux, num);
+    print_list(list);
+
+    pop_list(list);
+
     return 0;
 }
 
@@ -89,7 +111,6 @@ void print_list(List * list){
     }
 }
 
-
 bool is_empty(List * list){
     if(list->size == 0){
         return true;
@@ -123,4 +144,80 @@ Node * at_pos(List * list, int indice){
         }
     }
     return NULL;
+}
+
+int index_of_nota(List * list, float nota) {
+    int i = 0, cont = 0, x, h;
+    Node * aux = list->head;
+    float notala;
+    int * notas = (int *) malloc(list->size * sizeof(char));
+
+    while(aux) {
+        if(aux->nota == nota) {
+            notas[cont] = i;
+            cont++;
+        }
+        i++;
+        aux = aux->next;
+    }
+    for(h = 0; h < cont; h++) {
+        i = 0;
+        aux = list->head;
+        while(aux) {
+            if(notas[h] == i)
+                printf("(%d) Nota: %.2f\n", h, aux->nota);
+            aux = aux->next;
+            i++;
+        }
+    }
+
+    if(cont > 0) {
+        printf("Escolha qual nota voce deseja: ");
+        scanf("%d", &x);
+    }
+
+    for(h = 0; h < cont; h++) {
+        if(h == x) {
+            notala = notas[h];
+            free(notas);
+            return notala;
+        }
+    }
+    free(notas);
+    return -1;
+}
+
+void insert(List * list, Node * node, int index) {
+    Node * aux = list->head;
+    Node * aux_anterior = aux;
+    int i = 0;
+
+    if(index < list->size) {
+        while(aux) {
+            if(i == index) {
+                if(is_empty(list)) {
+                    push(list, node);
+                } else {
+                    node->next = aux;
+                    aux_anterior->next = node;
+                    list->size++;
+                }
+            }
+            i++;
+            aux_anterior = aux;
+            aux = aux->next;
+        }
+    } else {
+        printf("Indice invalido!\n");
+    }
+}
+
+void pop_list(List * list) {
+    Node * aux = list->head;
+
+    while(aux) {
+        pop(list);
+        aux = aux->next;
+    }
+    free(list);
 }

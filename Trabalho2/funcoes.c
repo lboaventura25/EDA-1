@@ -151,6 +151,8 @@ Aluno * menu_vizualiza_aluno(List * list) {
     Método que permite editar o aluno.
 */
 void menu_edita_aluno(Aluno * aluno) {
+    aluno->nome = (char *) realloc(aluno->nome, 50*sizeof(char));
+    aluno->email = (char *) realloc(aluno->email, 50*sizeof(char));
     printf("------------------------------------------------\n");
     printf("Digite o nome do Aluno: ");
     getchar();
@@ -162,6 +164,9 @@ void menu_edita_aluno(Aluno * aluno) {
     scanf("%[^\n]", aluno->email);
     edita_nome(aluno->nome, 0);
     edita_nome(aluno->email, 1);
+
+    printf("**** Aluno(a), %s, editada com sucesso ****\n", aluno->nome);
+    sleep(1.5);
 }
 
 /*
@@ -197,9 +202,16 @@ Aluno * buscar_aluno(List * list, int opcao) {
                         return aluno;
                     }
                 }
+            } else if(list_aux->size == 0) {
+                printf("*** Aluno nao encontrado ***\n");
+                sleep(1.5);
+                free(buscar);
+                free(list_aux);
+                return NULL;
             } else {
                 print_list(list_aux, 0);
 
+                buscar = (char *) realloc(buscar, 50 * sizeof(char));
                 printf("::: **** [VERIFICACAO] ****\n::: Digite o nome completo do Aluno --> ");
                 getchar();
                 scanf("%[^\n]", buscar);
@@ -230,40 +242,44 @@ Aluno * buscar_aluno(List * list, int opcao) {
             edita_nome(buscar, 1);
 
             list_aux = alunos_parecidos(list, buscar);
-            if(list_aux->size == 1) {
-                index = index_of(list, buscar, 0);
+            if(list_aux->size > 0) {
+                if(list_aux->size == 1) {
+                    index = index_of(list, buscar, 0);
 
-                if(index != -1000) {
-                    aluno = at_pos(list, index);
+                    if(index != -1000) {
+                        aluno = at_pos(list, index);
 
-                    if(aluno != NULL) {
-                        free(buscar);
+                        if(aluno != NULL) {
+                            free(buscar);
 
-                        pop_aluno(list_aux, 0);
-                        free(list_aux);
-                        return aluno;
+                            pop_aluno(list_aux, 0);
+                            free(list_aux);
+                            return aluno;
+                        }
                     }
+                } else {
+                    print_list(list_aux, 0);
+                    buscar = (char *) realloc(buscar, 50 * sizeof(char));
+                    printf("::: **** [VERIFICACAO] ****\n::::Digite o email completo do Aluno --> ");
+                    getchar();
+                    scanf("%[^\n]", buscar);
+                    edita_nome(buscar, 1);
+
+                    aluno = busca_perfeita(list, buscar);
+
+                    free(buscar);
+                    Aluno * aux = list_aux->head;
+                    while(aux) {
+                        pop_aluno(list_aux, 0);
+                        aux = aux->next;
+                    }
+                    free(list_aux);
+                    return aluno;
                 }
-            } else {
-                print_list(list_aux, 0);
-
-                printf("::: **** [VERIFICACAO] ****\n::::Digite o email completo do Aluno --> ");
-                getchar();
-                scanf("%[^\n]", buscar);
-                edita_nome(buscar, 1);
-
-                aluno = busca_perfeita(list, buscar);
-
-                free(buscar);
-                Aluno * aux = list_aux->head;
-                while(aux) {
-                    pop_aluno(list_aux, 0);
-                    aux = aux->next;
-                }
-                free(list_aux);
-                return aluno;
             }
 
+            printf("*** Aluno nao encontrado ***\n");
+            sleep(1.5);
             free(list_aux);
             free(buscar);
             return NULL;
@@ -298,12 +314,19 @@ Aluno * buscar_aluno(List * list, int opcao) {
 */
 void pop_aluno(List * list, int i) {
     Aluno * aux = list->head;
+    Disciplina * disc = aux->lista_disciplinas;
     char * nome = (char *) malloc(50 * sizeof(char));
 
     strcpy(nome, aux->nome);
     list->head = aux->next;
     free(aux->nome);
     free(aux->email);
+    if(disc) {
+        while(disc) {
+            pop_disciplina(aux, 0);
+            disc = disc->next;
+        }
+    }
     free(aux);
     list->size--;
 
@@ -692,7 +715,6 @@ void check_mencao(char * mencao) {
 void edita_disciplina(Disciplina * disciplina) {
     printf("--------------------------------------------------\n");
     printf("Nome da Disciplina: %s\n", disciplina->nome);
-    printf("Digite a nova mencao: ");
     check_mencao(disciplina->mencao);
     printf("--------------------------------------------------\n");
     printf("**** Disciplina, %s, editada com sucesso ****\n", disciplina->nome);
@@ -773,7 +795,7 @@ void pop_index_aluno(List * list, Aluno * aluno_anterior, Aluno * aluno_excluir)
     free(aux);
     list->size--; 
 
-    printf("**** Disciplina, %s, excluida com sucesso! ****\n", nome);
+    printf("**** Aluno(a), %s, excluida com sucesso! ****\n", nome);
     sleep(1.5);
     free(nome);
 }
@@ -815,7 +837,7 @@ int index_of_disciplina(Aluno * aluno, char * buscar) {
     }
 
     while(aux != NULL) {
-        if(!strcmp(buscar, aux->nome) || strstr(aux->nome, buscar) != NULL) {
+        if(!strcmp(buscar, aux->nome)) {
             break;
         }
         index++;
@@ -950,6 +972,7 @@ void relatorio_geral_aluno(Aluno * aluno) {
     } else {
         printf("**** Aluno nao existe! ****\n");
         sleep(1.5);
+        free(release);
     }
 }
 
