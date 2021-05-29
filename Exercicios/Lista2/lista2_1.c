@@ -1,22 +1,33 @@
 #include <stdio.h>
 
-    int expoente(int , int );
+double expoente(double , int);
 
 int main() {
     int x, n;
-    printf("Digite a base: ");
+    double novo_x;
+
     scanf("%d", &x);
-    printf("Digite o expoente: ");
     scanf("%d", &n);
-    
-    printf("%d^%d = %d\n", x, n, expoente(x, n));
+
+    if(x == 0) {
+        printf("indefinido\n");
+    } else {
+        novo_x = (double) x;
+
+        if(n < 0 && n != 0) {
+            novo_x = 1.0 / x;
+            n *= -1;
+        }
+
+        printf("%.3lf\n", expoente(novo_x, n));
+    }
 
     return 0;
 }
 
-int expoente(int x, int n) {
+double expoente(double x, int n) {
     if(n < 1) {
         return 1;
     }
-    return x * expoente(x, n-1);
+    return x * expoente(x, (n-1));
 }

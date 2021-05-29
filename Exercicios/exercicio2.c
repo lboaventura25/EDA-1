@@ -17,7 +17,7 @@ int main() {
 
 void ImprimaString(char *x) {
 
-    while(*x != '\0') {
+    while(*x) {
         printf("%c", *x);
         x++;
     }
@@ -26,7 +26,7 @@ void ImprimaString(char *x) {
     x--;
 
     while(*x) {
-        printf("%c", *x);
+        printf("%d\n", x);
         x--;
     }
     printf("\n");
